@@ -115,13 +115,13 @@ namespace Gibbed.DeadCells.Unpack
 
             using (var input = File.OpenRead(inputPath))
             {
-                const uint signature = 0x004B4150;
-                var magic = input.ReadValueU32(Endian.Little);
-                if (magic != signature && magic.Swap() != signature)
+                const uint signature = 0x50414B00; // 'PAK\0'
+                var magic = input.ReadValueU32(Endian.Big);
+                if (magic != signature)
                 {
                     throw new FormatException();
                 }
-                var endian = magic == signature ? Endian.Little : Endian.Big;
+                const Endian endian = Endian.Little;
 
                 var dataOffset = input.ReadValueU32(endian);
                 var dataSize = input.ReadValueU32(endian);
@@ -194,8 +194,8 @@ namespace Gibbed.DeadCells.Unpack
                     }
                 }
 
-                var dataMagic = input.ReadValueU32(endian);
-                if (dataMagic != 0x41544144) // 'DATA'
+                var dataMagic = input.ReadValueU32(Endian.Big);
+                if (dataMagic != 0x44415441) // 'DATA'
                 {
                     Console.WriteLine("[warning] Pak header did not end with 'DATA'! Files will likely be corrupt.");
                 }
