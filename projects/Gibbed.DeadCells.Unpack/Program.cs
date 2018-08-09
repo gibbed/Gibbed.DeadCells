@@ -160,7 +160,7 @@ namespace Gibbed.DeadCells.Unpack
                     for (; i < count; i++)
                     {
                         var nameLength = input.ReadValueU8();
-                        var name = input.ReadString(nameLength, true, Encoding.ASCII);
+                        var name = input.ReadString(nameLength, true, Encoding.UTF8);
                         var isDirectory = input.ReadValueB8();
                         if (isDirectory == false)
                         {
