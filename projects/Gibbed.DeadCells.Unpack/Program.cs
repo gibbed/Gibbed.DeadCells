@@ -123,10 +123,10 @@ namespace Gibbed.DeadCells.Unpack
                 }
                 const Endian endian = Endian.Little;
 
-                var dataOffset = input.ReadValueU32(endian);
+                var headerSize = input.ReadValueU32(endian);
                 var dataSize = input.ReadValueU32(endian);
 
-                if (dataOffset + dataSize != input.Length)
+                if (headerSize + dataSize != input.Length)
                 {
                     Console.WriteLine("[warning] Pak file size inconsistent!");
                 }
@@ -200,9 +200,9 @@ namespace Gibbed.DeadCells.Unpack
                     Console.WriteLine("[warning] Pak header did not end with 'DATA'! Files will likely be corrupt.");
                 }
 
-                if (dataOffset != input.Position)
+                if (headerSize != input.Position)
                 {
-                    Console.WriteLine("[warning] Data offset inconsistent! Files will likely be corrupt.");
+                    Console.WriteLine("[warning] Header size inconsistent! Files will likely be corrupt.");
                 }
 
                 long current = 0;
@@ -242,9 +242,9 @@ namespace Gibbed.DeadCells.Unpack
                         Directory.CreateDirectory(entryDirectory);
                     }
 
+                    input.Position = headerSize + file.Offset;
                     using (var output = File.Create(entryPath))
                     {
-                        input.Seek(dataOffset + file.Offset, SeekOrigin.Begin);
                         output.WriteFromStream(input, file.Size);
                     }
                 }
