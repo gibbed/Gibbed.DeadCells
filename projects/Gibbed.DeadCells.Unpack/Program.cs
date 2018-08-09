@@ -150,9 +150,6 @@ namespace Gibbed.DeadCells.Unpack
                 var stack = new Stack<PakStackDirectory>();
                 stack.Push(new PakStackDirectory(root, 0, rootFileCount));
 
-                int totalFiles = 0;
-                int totalDirectories = 0;
-
                 while (stack.Count > 0)
                 {
                     var item = stack.Pop();
@@ -180,7 +177,6 @@ namespace Gibbed.DeadCells.Unpack
                             };
                             dir.Files.Add(file);
                             files.Add(file);
-                            totalFiles++;
                         }
                         else
                         {
@@ -193,7 +189,6 @@ namespace Gibbed.DeadCells.Unpack
                             var subdirFileCount = input.ReadValueU32(endian);
                             stack.Push(new PakStackDirectory(dir, i + 1, count));
                             stack.Push(new PakStackDirectory(subdir, 0, subdirFileCount));
-                            totalDirectories++;
                             break;
                         }
                     }
